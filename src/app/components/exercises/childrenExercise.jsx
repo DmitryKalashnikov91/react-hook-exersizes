@@ -1,16 +1,16 @@
 import React from "react";
 import CollapseWrapper from "../common/collapse";
 import Divider from "../common/divider";
+import PropTypes from "prop-types";
 
 const ChildrenComponent = ({ children }) => {
-    const component = <Component />;
-    return React.Children.map(children, (child) => (
-        <>
-            <ol>
-                <li>{React.cloneElement(component, children)}</li>
-            </ol>
-        </>
-    ));
+    const getArrayComponent = React.Children.toArray(children).map((child) => {
+        return React.cloneElement(child, {
+            ...child,
+            num: +child.key[1] + 1
+        });
+    });
+    return getArrayComponent;
 };
 
 const ChildrenExercise = () => {
@@ -33,8 +33,19 @@ const ChildrenExercise = () => {
     );
 };
 
-const Component = () => {
-    return <div>Компонент списка</div>;
+const Component = ({ num }) => {
+    return <div>{num} Компонент списка</div>;
+};
+
+ChildrenComponent.propTypes = {
+    children: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.node),
+        PropTypes.node
+    ])
+};
+
+Component.propTypes = {
+    num: PropTypes.number
 };
 
 export default ChildrenExercise;
